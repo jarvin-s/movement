@@ -6,8 +6,16 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		5D63DA292F50860100F5D412 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5D63DA282F50860100F5D412 /* GoogleService-Info.plist */; };
+		5D63DA2C2F50879400F5D412 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = 5D63DA2B2F50879400F5D412 /* FirebaseAuth */; };
+		5D63DA2E2F50879400F5D412 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 5D63DA2D2F50879400F5D412 /* FirebaseFirestore */; };
+		5D63DA302F50879400F5D412 /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 5D63DA2F2F50879400F5D412 /* FirebaseStorage */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
-		5D63D9A12F4CAE6E00F5D412 /* health-and-lifestyle.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "health-and-lifestyle.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D63D9A12F4CAE6E00F5D412 /* TrackMyLife.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TrackMyLife.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		5D63DA282F50860100F5D412 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -23,6 +31,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5D63DA2C2F50879400F5D412 /* FirebaseAuth in Frameworks */,
+				5D63DA2E2F50879400F5D412 /* FirebaseFirestore in Frameworks */,
+				5D63DA302F50879400F5D412 /* FirebaseStorage in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -34,13 +45,14 @@
 			children = (
 				5D63D9A32F4CAE6E00F5D412 /* health-and-lifestyle */,
 				5D63D9A22F4CAE6E00F5D412 /* Products */,
+				5D63DA282F50860100F5D412 /* GoogleService-Info.plist */,
 			);
 			sourceTree = "<group>";
 		};
 		5D63D9A22F4CAE6E00F5D412 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				5D63D9A12F4CAE6E00F5D412 /* health-and-lifestyle.app */,
+				5D63D9A12F4CAE6E00F5D412 /* TrackMyLife.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -65,9 +77,12 @@
 			);
 			name = "health-and-lifestyle";
 			packageProductDependencies = (
+				5D63DA2B2F50879400F5D412 /* FirebaseAuth */,
+				5D63DA2D2F50879400F5D412 /* FirebaseFirestore */,
+				5D63DA2F2F50879400F5D412 /* FirebaseStorage */,
 			);
 			productName = "health-and-lifestyle";
-			productReference = 5D63D9A12F4CAE6E00F5D412 /* health-and-lifestyle.app */;
+			productReference = 5D63D9A12F4CAE6E00F5D412 /* TrackMyLife.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -94,6 +109,9 @@
 			);
 			mainGroup = 5D63D9982F4CAE6E00F5D412;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				5D63DA2A2F50879400F5D412 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 5D63D9A22F4CAE6E00F5D412 /* Products */;
 			projectDirPath = "";
@@ -109,6 +127,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5D63DA292F50860100F5D412 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -251,11 +270,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "health-and-lifestyle/health-and-lifestyle.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = B35Q3U22MT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "The app needs to share with heart rate and other stuff.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -266,8 +287,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "Jarvin.health-and-lifestyle";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = Jarvin.TrackMyLife;
+				PRODUCT_NAME = TrackMyLife;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -283,11 +304,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "health-and-lifestyle/health-and-lifestyle.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = B35Q3U22MT;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "The app needs to share with heart rate and other stuff.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -298,8 +321,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "Jarvin.health-and-lifestyle";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_BUNDLE_IDENTIFIER = Jarvin.TrackMyLife;
+				PRODUCT_NAME = TrackMyLife;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
 				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
@@ -332,6 +355,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5D63DA2A2F50879400F5D412 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.10.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5D63DA2B2F50879400F5D412 /* FirebaseAuth */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5D63DA2A2F50879400F5D412 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseAuth;
+		};
+		5D63DA2D2F50879400F5D412 /* FirebaseFirestore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5D63DA2A2F50879400F5D412 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseFirestore;
+		};
+		5D63DA2F2F50879400F5D412 /* FirebaseStorage */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5D63DA2A2F50879400F5D412 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseStorage;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 5D63D9992F4CAE6E00F5D412 /* Project object */;
 }
