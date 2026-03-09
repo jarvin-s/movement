@@ -13,7 +13,7 @@ struct HealthView: View {
 //        }
         
         VStack {
-            Text("Your step count today:")
+            Text("Today's step count:")
                 .font(.title)
             Text("\(Int(stepCount))")
                 .bold()

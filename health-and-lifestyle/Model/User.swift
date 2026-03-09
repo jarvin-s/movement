@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct User: Identifiable {
+struct User: Identifiable, Codable {
     let id: String
     let fullname: String
     let email: String
@@ -20,8 +20,14 @@ struct User: Identifiable {
         }
         return ""
     }
+
+    enum CodingKeys: String, CodingKey {
+        case id
+        case fullname
+        case email
+    }
 }
 
 extension User {
-    static var MOCK_USER = User(id: NSUUID().uuidString, fullname: "Jarvin Siegers", email:"jarvin123@gmail.com")
+    static var MOCK_USER = User(id: NSUUID().uuidString, fullname: "Jarvin Siegers", email: "jarvin123@gmail.com")
 }

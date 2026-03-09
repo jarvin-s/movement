@@ -4,31 +4,20 @@ struct Navbar: View {
 
     @EnvironmentObject var viewModel: AuthViewModel
     var body: some View {
-        HStack {
-            Button(action: {
-                viewModel.signOut()
-            }) {
-                Image(systemName: "arrow.left.circle.fill")
-                    .font(.system(size: 36))
-                    .foregroundStyle(Color.black)
+        TabView {
+            Tab("Health", systemImage: "heart.fill") {
+                HealthView()
             }
-
-            NavigationLink {
+            Tab("Profile", systemImage: "person.fill") {
                 ProfileView()
-                    .navigationBarBackButtonHidden(true)
-            } label: {
-                Image(systemName: "person.circle.fill")
-                    .font(.system(size: 36))
-                    .foregroundStyle(Color.black)
             }
         }
-        .padding()
-        .frame(alignment: .bottom)
     }
 }
 
 struct Navbar_Previews: PreviewProvider {
     static var previews: some View {
         Navbar()
+            .environmentObject(AuthViewModel())
     }
 }

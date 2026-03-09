@@ -17,7 +17,7 @@ struct LoginView: View {
                 .padding(.vertical, 32)
 
             HStack {
-                Text("Health & Fitness")
+                Text("Movement")
                     .font(.system(size: 40))
                     .fontWeight(.bold)
             }
@@ -59,7 +59,7 @@ struct LoginView: View {
                     HStack {
                         Image(systemName: "exclamationmark.circle.fill")
                             .foregroundStyle(Color.red)
-                        Text("Your password is incorrect.")
+                        Text("Password is incorrect.")
                             .foregroundColor(Color.red)
                             .cornerRadius(4)
                             .font(.footnote)

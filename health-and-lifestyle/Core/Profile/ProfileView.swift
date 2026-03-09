@@ -6,25 +6,26 @@ struct ProfileView: View {
 
     var body: some View {
         List {
-            Section {
-                HStack {
-                    Text(User.MOCK_USER.initials)
-                        .font(.title)
-                        .fontWeight(.semibold)
-                        .frame(width: 72, height: 72)
-
-                        .background(Color(.systemGray3))
-                        .clipShape(Circle())
-
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(User.MOCK_USER.fullname)
-                            .font(.subheadline)
+            if let user = viewModel.currentUser {
+                Section {
+                    HStack {
+                        Text(user.initials)
+                            .font(.title)
                             .fontWeight(.semibold)
-                            .padding(.top, 4)
+                            .frame(width: 72, height: 72)
+                            .background(Color(.systemGray3))
+                            .clipShape(Circle())
 
-                        Text(User.MOCK_USER.email)
-                            .font(.footnote)
-                            .foregroundStyle(.gray)
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(user.fullname)
+                                .font(.subheadline)
+                                .fontWeight(.semibold)
+                                .padding(.top, 4)
+
+                            Text(user.email)
+                                .font(.footnote)
+                                .foregroundStyle(.gray)
+                        }
                     }
                 }
             }
@@ -50,8 +51,8 @@ struct ProfileView: View {
                     dismiss()
                 } label: {
                     SettingsRowView(
-                        imageName: "arrow.left.circle.fill",
-                        title: "Steps overview",
+                        imageName: "house.fill",
+                        title: "Back to home",
                         tintColor: Color.black
                     )
                 }
@@ -74,6 +75,11 @@ struct ProfileView: View {
                         tintColor: Color(.systemRed)
                     )
                 }
+            }
+        }
+        .onChange(of: viewModel.userSession) {
+            if viewModel.userSession == nil {
+                dismiss()
             }
         }
     }

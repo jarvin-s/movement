@@ -51,10 +51,16 @@ struct RegistrationView: View {
                 .scaledToFill()
                 .frame(width: 100, height: 120)
                 .padding(.vertical, 32)
+            
+            HStack {
+                Text("Movement")
+                    .font(.system(size: 40))
+                    .fontWeight(.bold)
+            }
 
             VStack(spacing: 24) {
                 InputView(text: $email,
-                          title: "Email address*",
+                          title: "Email address",
                           placeholder: "name@example.com")
                     .autocapitalization(.none)
                 if let emailError {

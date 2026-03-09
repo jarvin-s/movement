@@ -8,7 +8,6 @@ struct ContentView: View {
         NavigationStack {
             Group {
                 if viewModel.userSession != nil {
-                    HealthView()
                     Navbar()
                 } else {
                     LoginView()
