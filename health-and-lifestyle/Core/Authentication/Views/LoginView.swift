@@ -10,7 +10,7 @@ struct LoginView: View {
 
     var body: some View {
         VStack {
-            Image("health-logo")
+            Image("movement-logo")
                 .resizable()
                 .scaledToFill()
                 .frame(width: 100, height: 120)
@@ -43,7 +43,16 @@ struct LoginView: View {
                           title: "Password",
                           placeholder: "Enter your password",
                           isSecureField: true)
-                
+
+                Button {
+                } label: {
+                    Text("Forgot your password?")
+                        .font(.footnote)
+                        .fontWeight(.semibold)
+                        .foregroundColor(Color(red: 232/255, green: 98/255, blue: 61/255))
+                }
+                .frame(maxWidth: .infinity, alignment: .trailing)
+
                 if let passwordError = passwordError {
                     HStack {
                         Image(systemName: "exclamationmark.circle.fill")
@@ -90,7 +99,7 @@ struct LoginView: View {
                 .frame(maxWidth: .infinity)
                 .frame(height: 48)
             }
-            .background(viewModel.isLoading ? Color.gray : Color.black)
+            .background(viewModel.isLoading ? Color.gray : Color(red: 232/255, green: 98/255, blue: 61/255))
             .cornerRadius(24)
             .padding(.horizontal, 16)
             .padding(.top, 24)
@@ -120,7 +129,7 @@ struct LoginView: View {
                     Text("Sign up")
                         .fontWeight(.bold)
                 }
-                .foregroundColor(Color.black)
+                .foregroundColor(Color(red: 232/255, green: 98/255, blue: 61/255))
                 .font(.system(size: 16))
             }
         }

@@ -3,6 +3,7 @@ import SwiftUI
 struct ProfileView: View {
     @EnvironmentObject var viewModel: AuthViewModel
     @Environment(\.dismiss) private var dismiss
+    @Binding var selectedTab: Int
 
     var body: some View {
         List {
@@ -48,11 +49,11 @@ struct ProfileView: View {
 
             Section("Account") {
                 Button {
-                    dismiss()
+                    selectedTab = 0
                 } label: {
                     SettingsRowView(
-                        imageName: "house.fill",
-                        title: "Back to home",
+                        imageName: "heart.fill",
+                        title: "Back to Health view",
                         tintColor: Color.black
                     )
                 }
@@ -87,6 +88,6 @@ struct ProfileView: View {
 
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileView()
+        ProfileView(selectedTab: .constant(1))
     }
 }

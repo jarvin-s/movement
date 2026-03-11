@@ -3,13 +3,15 @@ import SwiftUI
 struct Navbar: View {
 
     @EnvironmentObject var viewModel: AuthViewModel
+    @State private var selectedTab: Int = 0
+
     var body: some View {
-        TabView {
-            Tab("Health", systemImage: "heart.fill") {
+        TabView(selection: $selectedTab) {
+            Tab("Health", systemImage: "heart.fill", value: 0) {
                 HealthView()
             }
-            Tab("Profile", systemImage: "person.fill") {
-                ProfileView()
+            Tab("Profile", systemImage: "person.fill", value: 1) {
+                ProfileView(selectedTab: $selectedTab)
             }
         }
     }

@@ -46,7 +46,7 @@ struct RegistrationView: View {
 
     var body: some View {
         VStack {
-            Image("health-logo")
+            Image("movement-logo")
                 .resizable()
                 .scaledToFill()
                 .frame(width: 100, height: 120)
@@ -151,7 +151,7 @@ struct RegistrationView: View {
             .frame(maxWidth: .infinity)
             .frame(height: 48)
         }
-        .background(viewModel.isLoading ? Color.gray : Color.black)
+        .background(viewModel.isLoading ? Color.gray : Color(red: 232/255, green: 98/255, blue: 61/255))
         .cornerRadius(24)
         .padding(.horizontal, 16)
         .padding(.top, 24)
@@ -168,7 +168,7 @@ struct RegistrationView: View {
                 Text("Sign in")
                     .fontWeight(.bold)
             }
-            .foregroundColor(Color.black)
+            .foregroundColor(Color(red: 232/255, green: 98/255, blue: 61/255))
             .font(.system(size: 16))
         }
     }

@@ -1,51 +1,25 @@
 import SwiftUI
 
 struct HealthView: View {
-    @State private var stepCount: Double = 0
-    let healthStore = HealthStore()
+    @StateObject private var healthViewModel = HealthViewModel()
     @EnvironmentObject var viewModel: AuthViewModel
     
     var body: some View {
-//        if viewModel.userSession != nil {
-//            Button(action: viewModel.signOut) {
-//                Label("Sign out", systemImage: "arrow.left")
-//            }
-//        }
-        
         VStack {
             Text("Today's step count:")
                 .font(.title)
-            Text("\(Int(stepCount))")
+            Text("\(Int(healthViewModel.stepCount))")
                 .bold()
                 .font(.largeTitle)
-            
-            Button("Fetch steps"){
-                healthStore.fetchStepCount {
-                    steps in
-                    stepCount = steps
-                }
-            }
-            .buttonStyle(.borderedProminent)
-            .tint(.black)
         }
-        
         .padding()
-        .onAppear() {
-            requestHealthKitAccess()
+        .onAppear {
+            healthViewModel.requestAccessAndStartObserving()
+        }
+        .onDisappear {
+            healthViewModel.stopObserving()
         }
     }
-    
-    func requestHealthKitAccess(){
-        healthStore.requestAuthorization {
-            success, error in
-            if let error = error {
-                print("HealthKit authorization failed: \(error.localizedDescription)")
-            } else {
-                print ("HealthKit successfully authorized.")
-            }
-        }
-    }
-
 }
 
 #Preview {

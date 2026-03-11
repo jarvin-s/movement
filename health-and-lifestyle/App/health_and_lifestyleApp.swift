@@ -2,7 +2,7 @@ import SwiftUI
 import FirebaseCore
 import FirebaseFirestore
 import FirebaseAuth
-
+	
 @main
 struct health_and_lifestyleApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate

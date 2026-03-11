@@ -2,6 +2,7 @@ import HealthKit
 
 class HealthStore {
     let healthStore = HKHealthStore()
+    private var observerQuery: HKObserverQuery?
     
     func requestAuthorization(completion: @escaping(Bool, Error?)-> Void) {
         let stepCountType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
@@ -32,4 +33,23 @@ class HealthStore {
         healthStore.execute(query)
     }
     
+    func startObservingSteps(onChange: @escaping () -> Void) {
+        let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
+        
+        observerQuery = HKObserverQuery(sampleType: stepType, predicate: nil) { _, completionHandler, error in
+            if error == nil {
+                onChange()
+            }
+            completionHandler()
+        }
+        
+        healthStore.execute(observerQuery!)
+    }
+    
+    func stopObservingSteps() {
+        if let query = observerQuery {
+            healthStore.stop(query)
+            observerQuery = nil
+        }
+    }
 }
