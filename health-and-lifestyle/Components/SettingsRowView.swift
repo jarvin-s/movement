@@ -10,10 +10,11 @@ struct SettingsRowView: View {
                 .imageScale(.small)
                 .font(.title)
                 .foregroundColor(tintColor)
+                .symbolRenderingMode(.hierarchical)
 
             Text(title)
-            .font(.subheadline)
-            .foregroundColor(.black)
+                .font(.subheadline)
+                .foregroundStyle(.white)
         }
     }
 }

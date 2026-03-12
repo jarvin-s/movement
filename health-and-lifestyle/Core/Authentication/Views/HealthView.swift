@@ -4,9 +4,9 @@ struct HealthView: View {
     @StateObject private var healthViewModel = HealthViewModel()
     @EnvironmentObject var viewModel: AuthViewModel
 
-    private let accentOrange = Color(red: 232/255, green: 98/255, blue: 61/255)
-    private let bgColor = Color(red: 0x45/255, green: 0x42/255, blue: 0x42/255)
-    private let stepGoal: Double = 10_000
+    private let accentOrange = Color(red: 232 / 255, green: 98 / 255, blue: 61 / 255)
+    private let bgColor = Color(red: 0x45 / 255, green: 0x42 / 255, blue: 0x42 / 255)
+    private let stepGoal: Double = 10000
 
     private var firstName: String {
         viewModel.currentUser?.fullname.components(separatedBy: " ").first ?? ""
@@ -23,7 +23,7 @@ struct HealthView: View {
             ScrollView {
                 VStack(spacing: 0) {
                     headerBar
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         .padding(.top, 8)
 
                     stepsCard
@@ -46,26 +46,31 @@ struct HealthView: View {
     }
 
     private var headerBar: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(greeting)
-                    .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.7))
-                Text(firstName)
-                    .font(.headline)
-                    .foregroundStyle(accentOrange)
+        VStack() {
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(greeting)
+                        .font(.subheadline)
+                        .foregroundStyle(.white.opacity(0.7))
+                    Text(firstName)
+                        .font(.headline)
+                        .foregroundStyle(accentOrange)
+                }
+
+                Spacer()
+
+                HStack(spacing: 4) {
+                    Image(systemName: "flame.fill")
+                        .foregroundStyle(.orange)
+                    Text("\(Int(healthViewModel.stepCount / 200))")
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.white)
+                }
+                .font(.title2)
             }
 
-            Spacer()
-
-            HStack(spacing: 4) {
-                Image(systemName: "flame.fill")
-                    .foregroundStyle(.orange)
-                Text("\(Int(healthViewModel.stepCount / 200))")
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.white)
-            }
-            .font(.subheadline)
+            Divider()
+                .background(.white.opacity(0.2))
         }
     }
 
@@ -119,7 +124,7 @@ struct HealthView: View {
                 title: "Daily walker",
                 description: "Walk 10,000 steps today",
                 current: healthViewModel.stepCount,
-                goal: 10_000
+                goal: 10000
             )
 
             challengeRow(
@@ -127,7 +132,7 @@ struct HealthView: View {
                 title: "Getting warmed up",
                 description: "Reach 5,000 steps",
                 current: healthViewModel.stepCount,
-                goal: 5_000
+                goal: 5000
             )
 
             challengeRow(
@@ -135,7 +140,7 @@ struct HealthView: View {
                 title: "First steps",
                 description: "Walk at least 1,000 steps",
                 current: healthViewModel.stepCount,
-                goal: 1_000
+                goal: 1000
             )
         }
     }
@@ -185,7 +190,7 @@ struct HealthView: View {
                             .frame(height: 5)
 
                         Capsule()
-                            .fill(completed ? .green : accentOrange)
+                            .fill(accentOrange)
                             .frame(width: geometry.size.width * progress, height: 5)
                             .animation(.easeInOut(duration: 0.4), value: progress)
                     }
@@ -203,9 +208,9 @@ struct HealthView: View {
     private var greeting: String {
         let hour = Calendar.current.component(.hour, from: Date())
         switch hour {
-        case 5..<12: return "Good morning"
-        case 12..<17: return "Good afternoon"
-        case 17..<21: return "Good evening"
+        case 5 ..< 12: return "Good morning"
+        case 12 ..< 17: return "Good afternoon"
+        case 17 ..< 21: return "Good evening"
         default: return "Good night"
         }
     }
