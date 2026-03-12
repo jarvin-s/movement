@@ -5,6 +5,8 @@ struct Navbar: View {
     @EnvironmentObject var viewModel: AuthViewModel
     @State private var selectedTab: Int = 0
 
+    private let accentOrange = Color(red: 232/255, green: 98/255, blue: 61/255)
+
     var body: some View {
         TabView(selection: $selectedTab) {
             Tab("Health", systemImage: "heart.fill", value: 0) {
@@ -14,6 +16,7 @@ struct Navbar: View {
                 ProfileView(selectedTab: $selectedTab)
             }
         }
+        .tint(accentOrange)
     }
 }
 

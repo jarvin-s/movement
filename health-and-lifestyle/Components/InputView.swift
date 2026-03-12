@@ -5,23 +5,41 @@ struct InputView: View {
     let title: String
     let placeholder: String
     var isSecureField = false
+    var titleColor: Color = Color(.darkGray)
+    var textColor: Color = .primary
+    var borderColor: Color = Color(.systemGray4)
+    var placeholderColor: Color = Color(.placeholderText)
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: 8) {
             Text(title)
-                .foregroundColor(Color(.darkGray))
+                .foregroundColor(titleColor)
                 .fontWeight(.semibold)
                 .font(.footnote)
-            	
-            if isSecureField {
-                SecureField(placeholder, text: $text)
-                    .font(.system(size: 14))
-            } else {
-                TextField(placeholder, text: $text)
-                    .font(.system(size: 14))
+
+            ZStack(alignment: .leading) {
+                if text.isEmpty {
+                    Text(placeholder)
+                        .font(.system(size: 14))
+                        .foregroundColor(placeholderColor)
+                }
+
+                if isSecureField {
+                    SecureField("", text: $text)
+                        .font(.system(size: 14))
+                        .foregroundColor(textColor)
+                } else {
+                    TextField("", text: $text)
+                        .font(.system(size: 14))
+                        .foregroundColor(textColor)
+                }
             }
-            
-            Divider()
+            .padding(.horizontal, 14)
+            .padding(.vertical, 12)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(borderColor, lineWidth: 1)
+            )
         }
     }
 }

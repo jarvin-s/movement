@@ -12,6 +12,7 @@ struct health_and_lifestyleApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(viewModel)
+                .background(Color.gray)
         }
     }
 }

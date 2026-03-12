@@ -8,8 +8,13 @@ struct LoginView: View {
     @State private var loginError: String?
     @EnvironmentObject var viewModel: AuthViewModel
 
+    private let bgColor = Color(red: 0x45/255, green: 0x42/255, blue: 0x42/255)
+
     var body: some View {
-        VStack {
+        ZStack {
+            bgColor.ignoresSafeArea()
+
+            VStack {
             Image("movement-logo")
                 .resizable()
                 .scaledToFill()
@@ -19,13 +24,18 @@ struct LoginView: View {
             HStack {
                 Text("Movement")
                     .font(.system(size: 40))
+                    .foregroundStyle(Color.white)
                     .fontWeight(.bold)
             }
 
             VStack(spacing: 24) {
                 InputView(text: $email,
                           title: "Email address",
-                          placeholder: "name@example.com")
+                          placeholder: "name@example.com",
+                          titleColor: .white.opacity(0.7),
+                          textColor: .white,
+                          borderColor: .white.opacity(0.3),
+                          placeholderColor: .white.opacity(0.35))
                 .autocapitalization(.none)
                 
                 if let emailError = emailError {
@@ -42,14 +52,18 @@ struct LoginView: View {
                 InputView(text: $password,
                           title: "Password",
                           placeholder: "Enter your password",
-                          isSecureField: true)
+                          isSecureField: true,
+                          titleColor: .white.opacity(0.7),
+                          textColor: .white,
+                          borderColor: .white.opacity(0.3),
+                          placeholderColor: .white.opacity(0.35))
 
                 Button {
                 } label: {
                     Text("Forgot your password?")
                         .font(.footnote)
                         .fontWeight(.semibold)
-                        .foregroundColor(Color(red: 232/255, green: 98/255, blue: 61/255))
+                        .foregroundColor(.white)
                 }
                 .frame(maxWidth: .infinity, alignment: .trailing)
 
@@ -126,11 +140,13 @@ struct LoginView: View {
             } label: {
                 HStack(spacing: 3) {
                     Text("Don't have an account?")
+                        .foregroundColor(.white)
                     Text("Sign up")
                         .fontWeight(.bold)
+                        .foregroundColor(Color(red: 232/255, green: 98/255, blue: 61/255))
                 }
-                .foregroundColor(Color(red: 232/255, green: 98/255, blue: 61/255))
                 .font(.system(size: 16))
+                }
             }
         }
     }
