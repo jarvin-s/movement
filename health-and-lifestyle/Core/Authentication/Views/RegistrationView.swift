@@ -44,11 +44,46 @@ struct RegistrationView: View {
         return isValid
     }
 
-    private let bgColor = Color(red: 0x45/255, green: 0x42/255, blue: 0x42/255)
+    private let stars: [Star] = (0..<100).map { _ in
+        Star(
+            x: CGFloat.random(in: 0...1),
+            y: CGFloat.random(in: 0...1),
+            size: CGFloat.random(in: 0.8...2.8),
+            opacity: Double.random(in: 0.4...1.0),
+            twinkleDuration: Double.random(in: 1.5...4.5)
+        )
+    }
 
     var body: some View {
         ZStack {
-            bgColor.ignoresSafeArea()
+             LinearGradient(
+                colors: [
+                    Color(red: 0.02, green: 0.03, blue: 0.10),
+                    Color(red: 0.04, green: 0.06, blue: 0.18),
+                    Color(red: 0.07, green: 0.04, blue: 0.14),
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
+
+            ZStack {
+                Ellipse()
+                    .fill(Color(red: 0.3, green: 0.1, blue: 0.6).opacity(0.12))
+                    .frame(width: 280, height: 180)
+                    .blur(radius: 60)
+                    .offset(x: -80, y: -200)
+
+                Ellipse()
+                    .fill(Color(red: 0.1, green: 0.3, blue: 0.7).opacity(0.10))
+                    .frame(width: 220, height: 150)
+                    .blur(radius: 50)
+                    .offset(x: 100, y: 180)
+            }
+            .ignoresSafeArea()
+
+            StarfieldView(stars: stars)
+                .ignoresSafeArea()
 
             VStack {
                 Image("movement-logo")
