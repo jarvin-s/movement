@@ -3,6 +3,7 @@ import SwiftUI
 struct Navbar: View {
 
     @EnvironmentObject var viewModel: AuthViewModel
+    @StateObject private var healthViewModel = HealthViewModel()
     @State private var selectedTab: Int = 0
 
     private let accentOrange = Color(red: 232/255, green: 98/255, blue: 61/255)
@@ -13,10 +14,14 @@ struct Navbar: View {
                 HealthView()
             }
             Tab("Profile", systemImage: "person.fill", value: 1) {
-                ProfileView(selectedTab: $selectedTab)
+                ProfileView()
             }
         }
         .tint(accentOrange)
+        .environmentObject(healthViewModel)
+        .onAppear {
+            healthViewModel.requestAccessAndStartObserving()
+        }
     }
 }
 

@@ -2,8 +2,8 @@ import SwiftUI
 
 struct ProfileView: View {
     @EnvironmentObject var viewModel: AuthViewModel
+    @EnvironmentObject private var healthViewModel: HealthViewModel
     @Environment(\.dismiss) private var dismiss
-    @Binding var selectedTab: Int
 
     private let accentOrange = Color(red: 232 / 255, green: 98 / 255, blue: 61 / 255)
     private let stars: [Star] = (0..<100).map { _ in
@@ -103,25 +103,48 @@ struct ProfileView: View {
                 .textCase(.uppercase)
                 .padding(.leading, 4)
 
-            HStack {
-                SettingsRowView(
-                    imageName: "gear",
-                    title: "Version",
-                    tintColor: .white.opacity(0.5)
+            VStack(spacing: 0) {
+                healthMetricRow(
+                    imageName: "figure.walk",
+                    title: "Steps (today)",
+                    value: "\(Int(healthViewModel.stepCount))",
+                    tintColor: accentOrange
                 )
 
-                Spacer()
+                Divider().background(.white.opacity(0.1))
 
-                Text("1.0")
-                    .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.4))
+                healthMetricRow(
+                    imageName: "heart.fill",
+                    title: "Heart rate (latest)",
+                    value: healthViewModel.latestHeartRateBPM.map { "\(Int(round($0))) bpm" } ?? "—",
+                    tintColor: Color(.systemPink)
+                )
+
+                Divider().background(.white.opacity(0.1))
+
+                healthMetricRow(
+                    imageName: "flame.fill",
+                    title: "Active energy (today)",
+                    value: "\(Int(round(healthViewModel.activeEnergyKilocalories))) kcal",
+                    tintColor: Color(.systemOrange)
+                )
             }
-            .padding(14)
             .background(
                 RoundedRectangle(cornerRadius: 14)
                     .fill(.white.opacity(0.05))
             )
         }
+    }
+
+    private func healthMetricRow(imageName: String, title: String, value: String, tintColor: Color) -> some View {
+        HStack {
+            SettingsRowView(imageName: imageName, title: title, tintColor: tintColor)
+            Spacer()
+            Text(value)
+                .font(.subheadline)
+                .foregroundStyle(.white.opacity(0.55))
+        }
+        .padding(14)
     }
 
     private var accountSection: some View {
@@ -133,25 +156,6 @@ struct ProfileView: View {
                 .padding(.leading, 4)
 
             VStack(spacing: 0) {
-                Button {
-                    selectedTab = 0
-                } label: {
-                    HStack {
-                        SettingsRowView(
-                            imageName: "list.dash.header.rectangle.fill",
-                            title: "Back to Health view",
-                            tintColor: accentOrange
-                        )
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(.white.opacity(0.3))
-                    }
-                    .padding(14)
-                }
-
-                Divider().background(.white.opacity(0.1))
-
                 Button {
                     viewModel.signOut()
                 } label: {
@@ -198,6 +202,8 @@ struct ProfileView: View {
 
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileView(selectedTab: .constant(1))
+        ProfileView()
+            .environmentObject(AuthViewModel())
+            .environmentObject(HealthViewModel())
     }
 }

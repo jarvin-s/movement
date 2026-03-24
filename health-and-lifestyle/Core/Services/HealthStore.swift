@@ -32,7 +32,34 @@ class HealthStore {
         
         healthStore.execute(query)
     }
-    
+
+    func fetchLatestHeartRateToday(completion: @escaping (Double?) -> Void) {
+        let heartRateType = HKQuantityType.quantityType(forIdentifier: .heartRate)!
+        let startDate = Calendar.current.startOfDay(for: Date())
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: Date(), options: .strictStartDate)
+        let sort = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
+        let query = HKSampleQuery(sampleType: heartRateType, predicate: predicate, limit: 1, sortDescriptors: [sort]) { _, samples, _ in
+            guard let sample = samples?.first as? HKQuantitySample else {
+                DispatchQueue.main.async { completion(nil) }
+                return
+            }
+            let bpm = sample.quantity.doubleValue(for: HKUnit.count().unitDivided(by: HKUnit.minute()))
+            DispatchQueue.main.async { completion(bpm) }
+        }
+        healthStore.execute(query)
+    }
+
+    func fetchActiveEnergyBurnedToday(completion: @escaping (Double) -> Void) {
+        let energyType = HKQuantityType.quantityType(forIdentifier: .activeEnergyBurned)!
+        let startDate = Calendar.current.startOfDay(for: Date())
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: Date(), options: .strictStartDate)
+        let query = HKStatisticsQuery(quantityType: energyType, quantitySamplePredicate: predicate, options: .cumulativeSum) { _, result, _ in
+            let kcal = result?.sumQuantity()?.doubleValue(for: .kilocalorie()) ?? 0
+            DispatchQueue.main.async { completion(kcal) }
+        }
+        healthStore.execute(query)
+    }
+
     func startObservingSteps(onChange: @escaping () -> Void) {
         let stepType = HKQuantityType.quantityType(forIdentifier: .stepCount)!
         

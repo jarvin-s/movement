@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct HealthView: View {
-    @StateObject private var healthViewModel = HealthViewModel()
+    @EnvironmentObject private var healthViewModel: HealthViewModel
     @EnvironmentObject var viewModel: AuthViewModel
 
     private let accentOrange = Color(red: 232 / 255, green: 98 / 255, blue: 61 / 255)
@@ -72,12 +72,6 @@ struct HealthView: View {
                     Spacer(minLength: 40)
                 }
             }
-        }
-        .onAppear {
-            healthViewModel.requestAccessAndStartObserving()
-        }
-        .onDisappear {
-            healthViewModel.stopObserving()
         }
     }
 
@@ -261,4 +255,5 @@ struct HealthView: View {
 #Preview {
     HealthView()
         .environmentObject(AuthViewModel())
+        .environmentObject(HealthViewModel())
 }
