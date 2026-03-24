@@ -1,12 +1,21 @@
 import SwiftUI
 
 struct HealthView: View {
-    @StateObject private var healthViewModel = HealthViewModel()
+    @EnvironmentObject private var healthViewModel: HealthViewModel
     @EnvironmentObject var viewModel: AuthViewModel
 
-    private let accentOrange = Color(red: 232/255, green: 98/255, blue: 61/255)
-    private let bgColor = Color(red: 0x45/255, green: 0x42/255, blue: 0x42/255)
-    private let stepGoal: Double = 10_000
+    private let accentOrange = Color(red: 232 / 255, green: 98 / 255, blue: 61 / 255)
+    private let stepGoal: Double = 10000
+
+    private let stars: [Star] = (0..<120).map { _ in
+        Star(
+            x: CGFloat.random(in: 0...1),
+            y: CGFloat.random(in: 0...1),
+            size: CGFloat.random(in: 0.8...2.8),
+            opacity: Double.random(in: 0.4...1.0),
+            twinkleDuration: Double.random(in: 1.5...4.5)
+        )
+    }
 
     private var firstName: String {
         viewModel.currentUser?.fullname.components(separatedBy: " ").first ?? ""
@@ -18,12 +27,39 @@ struct HealthView: View {
 
     var body: some View {
         ZStack {
-            bgColor.ignoresSafeArea()
+            LinearGradient(
+                colors: [
+                    Color(red: 0.02, green: 0.03, blue: 0.10),
+                    Color(red: 0.04, green: 0.06, blue: 0.18),
+                    Color(red: 0.07, green: 0.04, blue: 0.14),
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
+
+            ZStack {
+                Ellipse()
+                    .fill(Color(red: 0.3, green: 0.1, blue: 0.6).opacity(0.12))
+                    .frame(width: 280, height: 180)
+                    .blur(radius: 60)
+                    .offset(x: -80, y: -200)
+
+                Ellipse()
+                    .fill(Color(red: 0.1, green: 0.3, blue: 0.7).opacity(0.10))
+                    .frame(width: 220, height: 150)
+                    .blur(radius: 50)
+                    .offset(x: 100, y: 180)
+            }
+            .ignoresSafeArea()
+
+            StarfieldView(stars: stars)
+                .ignoresSafeArea()
 
             ScrollView {
                 VStack(spacing: 0) {
                     headerBar
-                        .padding(.horizontal, 20)
+                        .padding(.horizontal, 24)
                         .padding(.top, 8)
 
                     stepsCard
@@ -37,35 +73,34 @@ struct HealthView: View {
                 }
             }
         }
-        .onAppear {
-            healthViewModel.requestAccessAndStartObserving()
-        }
-        .onDisappear {
-            healthViewModel.stopObserving()
-        }
     }
 
     private var headerBar: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 2) {
-                Text(greeting)
-                    .font(.subheadline)
-                    .foregroundStyle(.white.opacity(0.7))
-                Text(firstName)
-                    .font(.headline)
-                    .foregroundStyle(accentOrange)
+        VStack() {
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(greeting)
+                        .font(.subheadline)
+                        .foregroundStyle(.white.opacity(0.7))
+                    Text(firstName)
+                        .font(.headline)
+                        .foregroundStyle(accentOrange)
+                }
+
+                Spacer()
+
+                HStack(spacing: 4) {
+                    Image(systemName: "flame.fill")
+                        .foregroundStyle(.orange)
+                    Text("\(Int(healthViewModel.stepCount / 200))")
+                        .fontWeight(.semibold)
+                        .foregroundStyle(.white)
+                }
+                .font(.title2)
             }
 
-            Spacer()
-
-            HStack(spacing: 4) {
-                Image(systemName: "flame.fill")
-                    .foregroundStyle(.orange)
-                Text("\(Int(healthViewModel.stepCount / 200))")
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.white)
-            }
-            .font(.subheadline)
+            Divider()
+                .background(.white.opacity(0.2))
         }
     }
 
@@ -119,7 +154,7 @@ struct HealthView: View {
                 title: "Daily walker",
                 description: "Walk 10,000 steps today",
                 current: healthViewModel.stepCount,
-                goal: 10_000
+                goal: 10000
             )
 
             challengeRow(
@@ -127,7 +162,7 @@ struct HealthView: View {
                 title: "Getting warmed up",
                 description: "Reach 5,000 steps",
                 current: healthViewModel.stepCount,
-                goal: 5_000
+                goal: 5000
             )
 
             challengeRow(
@@ -135,7 +170,7 @@ struct HealthView: View {
                 title: "First steps",
                 description: "Walk at least 1,000 steps",
                 current: healthViewModel.stepCount,
-                goal: 1_000
+                goal: 1000
             )
         }
     }
@@ -185,7 +220,7 @@ struct HealthView: View {
                             .frame(height: 5)
 
                         Capsule()
-                            .fill(completed ? .green : accentOrange)
+                            .fill(accentOrange)
                             .frame(width: geometry.size.width * progress, height: 5)
                             .animation(.easeInOut(duration: 0.4), value: progress)
                     }
@@ -203,9 +238,9 @@ struct HealthView: View {
     private var greeting: String {
         let hour = Calendar.current.component(.hour, from: Date())
         switch hour {
-        case 5..<12: return "Good morning"
-        case 12..<17: return "Good afternoon"
-        case 17..<21: return "Good evening"
+        case 5 ..< 12: return "Good morning"
+        case 12 ..< 17: return "Good afternoon"
+        case 17 ..< 21: return "Good evening"
         default: return "Good night"
         }
     }
@@ -220,4 +255,5 @@ struct HealthView: View {
 #Preview {
     HealthView()
         .environmentObject(AuthViewModel())
+        .environmentObject(HealthViewModel())
 }

@@ -15,3 +15,8 @@ Pods/
 
 # Firebase
 *.plist
+*.dataconnect
+.firebase
+*.log
+firebase.json
+.firebaserc
