@@ -1,6 +1,8 @@
 import Foundation
 import FirebaseAuth
 import FirebaseFirestore
+import FirebaseCore
+import GoogleSignIn
 internal import Combine
 
 class AuthViewModel: ObservableObject {
@@ -9,11 +11,30 @@ class AuthViewModel: ObservableObject {
     @Published var currentUser: User?
     @Published var showWrongPasswordError = false
     @Published var isLoading = false
+
+    private var authStateListener: AuthStateDidChangeListenerHandle?
     
     init() {
         self.userSession = Auth.auth().currentUser
         if let uid = userSession?.uid {
             fetchUser(uid: uid)
+        }
+        authStateListener = Auth.auth().addStateDidChangeListener { [weak self] _, user in
+            DispatchQueue.main.async {
+                guard let self else { return }
+                self.userSession = user
+                if let uid = user?.uid {
+                    self.fetchUser(uid: uid)
+                } else {
+                    self.currentUser = nil
+                }
+            }
+        }
+    }
+
+    deinit {
+        if let authStateListener {
+            Auth.auth().removeStateDidChangeListener(authStateListener)
         }
     }
     
@@ -84,7 +105,75 @@ class AuthViewModel: ObservableObject {
         }
     }
     
+    func signInWithGoogle() {
+        guard let clientID = FirebaseApp.app()?.options.clientID else { return }
+
+        let config = GIDConfiguration(clientID: clientID)
+        GIDSignIn.sharedInstance.configuration = config
+
+        guard let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene,
+              let rootVC = windowScene.windows.first?.rootViewController else { return }
+
+        isLoading = true
+
+        GIDSignIn.sharedInstance.signIn(withPresenting: rootVC) { [weak self] result, error in
+            guard let self = self else { return }
+
+            if let error = error {
+                DispatchQueue.main.async { self.isLoading = false }
+                print("Google Sign-In failed: \(error.localizedDescription)")
+                return
+            }
+
+            guard let googleUser = result?.user,
+                  let idToken = googleUser.idToken?.tokenString else {
+                DispatchQueue.main.async { self.isLoading = false }
+                return
+            }
+
+            let credential = GoogleAuthProvider.credential(
+                withIDToken: idToken,
+                accessToken: googleUser.accessToken.tokenString
+            )
+
+            Auth.auth().signIn(with: credential) { [weak self] authResult, error in
+                guard let self = self else { return }
+
+                DispatchQueue.main.async { self.isLoading = false }
+
+                if let error = error {
+                    print("Firebase sign-in with Google failed: \(error.localizedDescription)")
+                    return
+                }
+
+                guard let firebaseUser = authResult?.user else { return }
+
+                let fullname = googleUser.profile?.name ?? "Unknown"
+                let email = googleUser.profile?.email ?? ""
+
+                Firestore.firestore().collection("users").document(firebaseUser.uid).getDocument { [weak self] snapshot, _ in
+                    if snapshot?.exists == true {
+                        DispatchQueue.main.async {
+                            self?.userSession = firebaseUser
+                            self?.fetchUser(uid: firebaseUser.uid)
+                        }
+                    } else {
+                        let user = User(id: firebaseUser.uid, fullname: fullname, email: email)
+                        let encoded = try? Firestore.Encoder().encode(user)
+                        Firestore.firestore().collection("users").document(firebaseUser.uid).setData(encoded ?? [:]) { _ in
+                            DispatchQueue.main.async {
+                                self?.userSession = firebaseUser
+                                self?.currentUser = user
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     func signOut() {
+        GIDSignIn.sharedInstance.signOut()
         try? Auth.auth().signOut()
         self.userSession = nil
         self.currentUser = nil
