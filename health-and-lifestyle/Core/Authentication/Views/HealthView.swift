@@ -25,6 +25,8 @@ struct HealthView: View {
         min(healthViewModel.stepCount / stepGoal, 1.0)
     }
 
+    @State private var headerHeight: CGFloat = 0
+
     var body: some View {
         ZStack {
             LinearGradient(
@@ -56,27 +58,46 @@ struct HealthView: View {
             StarfieldView(stars: stars)
                 .ignoresSafeArea()
 
-            ScrollView {
-                VStack(spacing: 0) {
-                    headerBar
-                        .padding(.horizontal, 24)
-                        .padding(.top, 8)
+            VStack(spacing: 0) {
+                headerBar
+                    .padding(.horizontal, 0)
+                    .padding(.top, 8)
+                    .background {
+                        GeometryReader { geo in
+                            Color.clear.preference(key: HeaderHeightKey.self, value: geo.size.height)
+                        }
+                    }
+                    .background(
+                        LinearGradient(
+                            colors: [
+                                Color(red: 0.02, green: 0.03, blue: 0.10),
+                                Color(red: 0.04, green: 0.06, blue: 0.18),
+                            ],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+                    .zIndex(1)
 
-                    stepsCard
-                        .padding(.top, 28)
+                ScrollView {
+                    VStack(spacing: 0) {
+                        stepsCard
+                            .padding(.top, 28)
 
-                    challengesSection
-                        .padding(.top, 32)
-                        .padding(.horizontal, 20)
+                        SolarSystemProgressView()
+                            .padding(.top, 32)
+                            .padding(.horizontal, 20)
 
-                    Spacer(minLength: 40)
+                        Spacer(minLength: 40)
+                    }
                 }
             }
         }
+        .onPreferenceChange(HeaderHeightKey.self) { headerHeight = $0 }
     }
 
     private var headerBar: some View {
-        VStack() {
+        VStack(spacing: 0) {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(greeting)
@@ -98,6 +119,8 @@ struct HealthView: View {
                 }
                 .font(.title2)
             }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 8)
 
             Divider()
                 .background(.white.opacity(0.2))
@@ -143,98 +166,6 @@ struct HealthView: View {
         }
     }
 
-    private var challengesSection: some View {
-        VStack(alignment: .leading, spacing: 14) {
-            Text("Challenges")
-                .font(.title3.weight(.bold))
-                .foregroundStyle(.white)
-
-            challengeRow(
-                icon: "figure.walk",
-                title: "Daily walker",
-                description: "Walk 10,000 steps today",
-                current: healthViewModel.stepCount,
-                goal: 10000
-            )
-
-            challengeRow(
-                icon: "flame.fill",
-                title: "Getting warmed up",
-                description: "Reach 5,000 steps",
-                current: healthViewModel.stepCount,
-                goal: 5000
-            )
-
-            challengeRow(
-                icon: "star.fill",
-                title: "First steps",
-                description: "Walk at least 1,000 steps",
-                current: healthViewModel.stepCount,
-                goal: 1000
-            )
-        }
-    }
-
-    private func challengeRow(icon: String, title: String, description: String, current: Double, goal: Double) -> some View {
-        let progress = min(current / goal, 1.0)
-        let completed = current >= goal
-
-        return HStack(spacing: 14) {
-            ZStack {
-                RoundedRectangle(cornerRadius: 10)
-                    .fill(completed ? accentOrange : .white.opacity(0.08))
-                    .frame(width: 42, height: 42)
-
-                Image(systemName: icon)
-                    .font(.system(size: 18))
-                    .foregroundStyle(completed ? .white : accentOrange)
-            }
-
-            VStack(alignment: .leading, spacing: 6) {
-                HStack {
-                    Text(title)
-                        .font(.subheadline.weight(.semibold))
-                        .foregroundStyle(.white)
-
-                    Spacer()
-
-                    if completed {
-                        Image(systemName: "checkmark.circle.fill")
-                            .foregroundStyle(.green)
-                            .font(.subheadline)
-                    } else {
-                        Text("\(Int(current))/\(Int(goal))")
-                            .font(.caption)
-                            .foregroundStyle(.white.opacity(0.5))
-                    }
-                }
-
-                Text(description)
-                    .font(.caption)
-                    .foregroundStyle(.white.opacity(0.5))
-
-                GeometryReader { geometry in
-                    ZStack(alignment: .leading) {
-                        Capsule()
-                            .fill(.white.opacity(0.1))
-                            .frame(height: 5)
-
-                        Capsule()
-                            .fill(accentOrange)
-                            .frame(width: geometry.size.width * progress, height: 5)
-                            .animation(.easeInOut(duration: 0.4), value: progress)
-                    }
-                }
-                .frame(height: 5)
-            }
-        }
-        .padding(14)
-        .background(
-            RoundedRectangle(cornerRadius: 14)
-                .fill(.white.opacity(0.05))
-        )
-    }
-
     private var greeting: String {
         let hour = Calendar.current.component(.hour, from: Date())
         switch hour {
@@ -252,8 +183,16 @@ struct HealthView: View {
     }
 }
 
+private struct HeaderHeightKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = max(value, nextValue())
+    }
+}
+
 #Preview {
     HealthView()
         .environmentObject(AuthViewModel())
         .environmentObject(HealthViewModel())
+        .environmentObject(SolarProgressViewModel())
 }
