@@ -7,12 +7,14 @@ import GoogleSignIn
 @main
 struct health_and_lifestyleApp: App {
     @UIApplicationDelegateAdaptor(AppDelegate.self) var delegate
-    @StateObject var viewModel = AuthViewModel()
+    @StateObject private var authViewModel = AuthViewModel()
+    @StateObject private var onboardingViewModel = OnboardingViewModel()
 
     var body: some Scene {
         WindowGroup {
             ContentView()
-                .environmentObject(viewModel)
+                .environmentObject(authViewModel)
+                .environmentObject(onboardingViewModel)
                 .background(Color.gray)
         }
     }

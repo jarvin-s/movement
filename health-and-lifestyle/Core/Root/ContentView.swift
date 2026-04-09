@@ -2,15 +2,22 @@
 import SwiftUI
 
 struct ContentView: View {
-    @EnvironmentObject var viewModel: AuthViewModel
+    @EnvironmentObject private var authViewModel: AuthViewModel
+    @EnvironmentObject private var onboardingViewModel: OnboardingViewModel
 
     var body: some View {
-        NavigationStack {
-            Group {
-                if viewModel.userSession != nil {
-                    Navbar()
-                } else {
-                    LoginView()
+        Group {
+            if !onboardingViewModel.hasCompletedOnboarding {
+                OnboardingView()
+            } else {
+                NavigationStack {
+                    Group {
+                        if authViewModel.userSession != nil {
+                            Navbar()
+                        } else {
+                            LoginView()
+                        }
+                    }
                 }
             }
         }
@@ -20,4 +27,5 @@ struct ContentView: View {
 #Preview {
     ContentView()
         .environmentObject(AuthViewModel())
+        .environmentObject(OnboardingViewModel())
 }
