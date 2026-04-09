@@ -6,30 +6,182 @@ struct LoginView: View {
     @State private var emailError: String?
     @State private var passwordError: String?
     @State private var loginError: String?
+    @State private var showEmailForm = false
     @EnvironmentObject var viewModel: AuthViewModel
 
+    private let accentOrange = Color(red: 232/255, green: 98/255, blue: 61/255)
+
+    private let stars: [Star] = (0..<100).map { _ in
+        Star(
+            x: CGFloat.random(in: 0...1),
+            y: CGFloat.random(in: 0...1),
+            size: CGFloat.random(in: 0.8...2.8),
+            opacity: Double.random(in: 0.4...1.0),
+            twinkleDuration: Double.random(in: 1.5...4.5)
+        )
+    }   
+
     var body: some View {
-        VStack {
-            Image("movement-logo")
-                .resizable()
-                .scaledToFill()
-                .frame(width: 100, height: 120)
-                .padding(.vertical, 32)
+        ZStack {
+            LinearGradient(
+                colors: [
+                    Color(red: 0.02, green: 0.03, blue: 0.10),
+                    Color(red: 0.04, green: 0.06, blue: 0.18),
+                    Color(red: 0.07, green: 0.04, blue: 0.14),
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .ignoresSafeArea()
+
+            ZStack {
+                Ellipse()
+                    .fill(Color(red: 0.3, green: 0.1, blue: 0.6).opacity(0.12))
+                    .frame(width: 280, height: 180)
+                    .blur(radius: 60)
+                    .offset(x: -80, y: -200)
+
+                Ellipse()
+                    .fill(Color(red: 0.1, green: 0.3, blue: 0.7).opacity(0.10))
+                    .frame(width: 220, height: 150)
+                    .blur(radius: 50)
+                    .offset(x: 100, y: 180)
+            }
+            .ignoresSafeArea()
+
+            StarfieldView(stars: stars)
+                .ignoresSafeArea()
+
+            VStack {
+                Image("movement-logo")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 100, height: 120)
+                    .padding(.vertical, 32)
+
+                HStack {
+                    Text("Movement")
+                        .font(.system(size: 40))
+                        .foregroundStyle(Color.white)
+                        .fontWeight(.bold)
+                }
+
+                if showEmailForm {
+                    emailFormView
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                } else {
+                    buttonPickerView
+                        .transition(.opacity)
+                }
+
+                Spacer()
+
+                NavigationLink {
+                    RegistrationView()
+                        .navigationBarBackButtonHidden(true)
+                } label: {
+                    HStack(spacing: 3) {
+                        Text("Don't have an account?")
+                            .foregroundColor(.white)
+                        Text("Sign up")
+                            .fontWeight(.bold)
+                            .foregroundColor(accentOrange)
+                    }
+                    .font(.system(size: 16))
+                }
+            }
+        }
+        .animation(.easeInOut(duration: 0.3), value: showEmailForm)
+    }
+
+    private var buttonPickerView: some View {
+        VStack(spacing: 12) {
+            Button {
+                showEmailForm = true
+            } label: {
+                HStack(spacing: 10) {
+                    Image(systemName: "envelope.fill")
+                        .font(.system(size: 16))
+                    Text("Sign in with Email")
+                        .fontWeight(.semibold)
+                }
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .frame(height: 48)
+            }
+            .background(accentOrange)
+            .cornerRadius(24)
 
             HStack {
-                Text("Movement")
-                    .font(.system(size: 40))
-                    .fontWeight(.bold)
+                Rectangle()
+                    .fill(.white.opacity(0.25))
+                    .frame(height: 1)
+                Text("OR")
+                    .font(.footnote)
+                    .fontWeight(.medium)
+                    .foregroundColor(.white.opacity(0.5))
+                Rectangle()
+                    .fill(.white.opacity(0.25))
+                    .frame(height: 1)
             }
+            .padding(.vertical, 4)
+
+            Button {
+                viewModel.signInWithGoogle()
+            } label: {
+                HStack(spacing: 10) {
+                    GoogleLogoView(size: 20)
+                    Text("Sign in with Google")
+                        .fontWeight(.semibold)
+                }
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .frame(height: 48)
+            }
+            .background(Color.white.opacity(0.08))
+            .cornerRadius(24)
+            .overlay(
+                RoundedRectangle(cornerRadius: 24)
+                    .stroke(.white.opacity(0.2), lineWidth: 1)
+            )
+        }
+        .padding(.horizontal, 16)
+        .padding(.top, 32)
+    }
+
+    private var emailFormView: some View {
+        VStack(spacing: 0) {
+            Button {
+                showEmailForm = false
+                emailError = nil
+                passwordError = nil
+                loginError = nil
+            } label: {
+                HStack(spacing: 4) {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 14, weight: .semibold))
+                    Text("All sign in options")
+                        .font(.subheadline)
+                        .fontWeight(.medium)
+                }
+                .foregroundColor(.white.opacity(0.7))
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 16)
+            .padding(.top, 16)
 
             VStack(spacing: 24) {
                 InputView(text: $email,
                           title: "Email address",
-                          placeholder: "name@example.com")
+                          placeholder: "name@example.com",
+                          titleColor: .white.opacity(0.7),
+                          textColor: .white,
+                          borderColor: .white.opacity(0.3),
+                          placeholderColor: .white.opacity(0.35))
                 .autocapitalization(.none)
-                
+
                 if let emailError = emailError {
-                    HStack{
+                    HStack {
                         Image(systemName: "exclamationmark.circle.fill")
                             .foregroundStyle(Color.red)
                         Text(emailError)
@@ -38,18 +190,22 @@ struct LoginView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
-                
+
                 InputView(text: $password,
                           title: "Password",
                           placeholder: "Enter your password",
-                          isSecureField: true)
+                          isSecureField: true,
+                          titleColor: .white.opacity(0.7),
+                          textColor: .white,
+                          borderColor: .white.opacity(0.3),
+                          placeholderColor: .white.opacity(0.35))
 
                 Button {
                 } label: {
                     Text("Forgot your password?")
                         .font(.footnote)
                         .fontWeight(.semibold)
-                        .foregroundColor(Color(red: 232/255, green: 98/255, blue: 61/255))
+                        .foregroundColor(.white)
                 }
                 .frame(maxWidth: .infinity, alignment: .trailing)
 
@@ -63,7 +219,7 @@ struct LoginView: View {
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }
-                
+
                 if viewModel.showWrongPasswordError {
                     HStack {
                         Image(systemName: "exclamationmark.circle.fill")
@@ -99,13 +255,13 @@ struct LoginView: View {
                 .frame(maxWidth: .infinity)
                 .frame(height: 48)
             }
-            .background(viewModel.isLoading ? Color.gray : Color(red: 232/255, green: 98/255, blue: 61/255))
+            .background(viewModel.isLoading ? Color.gray : accentOrange)
             .cornerRadius(24)
             .padding(.horizontal, 16)
             .padding(.top, 24)
             .disabled(viewModel.isLoading)
             .animation(.easeInOut(duration: 0.2), value: viewModel.isLoading)
-            
+
             if let loginError = loginError {
                 HStack {
                     Image(systemName: "exclamationmark.circle.fill")
@@ -116,21 +272,6 @@ struct LoginView: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
                 .padding(.top, 8)
-            }
-
-            Spacer()
-
-            NavigationLink {
-                RegistrationView()
-                    .navigationBarBackButtonHidden(true)
-            } label: {
-                HStack(spacing: 3) {
-                    Text("Don't have an account?")
-                    Text("Sign up")
-                        .fontWeight(.bold)
-                }
-                .foregroundColor(Color(red: 232/255, green: 98/255, blue: 61/255))
-                .font(.system(size: 16))
             }
         }
     }

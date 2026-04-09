@@ -16,7 +16,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "5D63D9A02F4CAE6E00F5D412"
-               BuildableName = "health-and-lifestyle.app"
+               BuildableName = "Movement.app"
                BlueprintName = "health-and-lifestyle"
                ReferencedContainer = "container:health-and-lifestyle.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5D63D9A02F4CAE6E00F5D412"
-            BuildableName = "health-and-lifestyle.app"
+            BuildableName = "Movement.app"
             BlueprintName = "health-and-lifestyle"
             ReferencedContainer = "container:health-and-lifestyle.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "5D63D9A02F4CAE6E00F5D412"
-            BuildableName = "health-and-lifestyle.app"
+            BuildableName = "Movement.app"
             BlueprintName = "health-and-lifestyle"
             ReferencedContainer = "container:health-and-lifestyle.xcodeproj">
          </BuildableReference>
