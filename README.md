@@ -2,6 +2,10 @@
 
 Movement is an app all about (surprise) moving. It's an iOS app that tracks your daily movement and activity.
 
+## Demo
+
+https://github.com/user-attachments/assets/a1ad1890-c3ec-4db3-a63b-0dcf1ed68175
+
 ## Tech Stack
  
 - **SwiftUI** -  Declarative UI, for building user interfaces on iOS
